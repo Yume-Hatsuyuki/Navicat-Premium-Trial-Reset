@@ -1,14 +1,14 @@
 # 查询并删除 HKEY_CURRENT_USER\SOFTWARE\PremiumSoft\NavicatPremium 下的所有 Update 键值
-Write-Output "删除了: HKEY_CURRENT_USER\SOFTWARE\PremiumSoft\NavicatPremium\Update"
+Write-Output "清空了: HKEY_CURRENT_USER\SOFTWARE\PremiumSoft\NavicatPremium\Update"
 Remove-ItemProperty -Path "HKCU:\SOFTWARE\PremiumSoft\NavicatPremium\Update" -Name * -Force
 
 # 查询并删除 HKEY_CURRENT_USER\SOFTWARE\PremiumSoft\NavicatPremium 下的所有 Registration 键
 Get-ChildItem -Path "HKCU:\SOFTWARE\PremiumSoft\NavicatPremium" -Recurse | Where-Object { $_.Name -match "Registration" } | ForEach-Object {
-    Write-Output "删除了: $($_.PSPath)"
+    Write-Output "清空了: $($_.PSPath)"
     Remove-ItemProperty -Path $_.PSPath -Name * -Force
 }
 
-# 查询并删除 HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID 下的所有 Info 键
+# 查询并删除 HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID 下的所有包含 Info 键的文件夹
 Get-ChildItem -Path "HKCU:\SOFTWARE\Classes\CLSID" | ForEach-Object {
     $clisdKey = $_.PSPath
     $infoKeys = Get-ChildItem -Path $clisdKey -Recurse | Where-Object { $_.Name -match "Info" }
@@ -18,7 +18,7 @@ Get-ChildItem -Path "HKCU:\SOFTWARE\Classes\CLSID" | ForEach-Object {
     }
 }
 
-# 查询并删除 HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID 下符合条件的 DefaultIcon 和 ShellFolder 键
+# 查询并删除 HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID 下符合条件同时包含 DefaultIcon 和 ShellFolder 键值都为空的文件夹
 
 # 获取所有 CLSID 项
 $clsidItems = Get-ChildItem -Path "HKCU:\Software\Classes\CLSID"
